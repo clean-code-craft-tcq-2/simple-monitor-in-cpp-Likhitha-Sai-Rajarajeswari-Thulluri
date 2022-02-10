@@ -12,7 +12,7 @@ const float chargeRateUpperrLimit = 0.8F;
 
 void printOnConsole(string str)
 {
-    std::cout<<str;
+    std::cout<<str<<endl;
 }
 
 bool checkIfValueisWithinThreshold(string parameterName, float lowerLimit, float upperLimit, float value)
@@ -37,7 +37,17 @@ bool batteryIsOk(float temperature, float soc, float chargeRate) {
                 && checkIfValueisWithinThreshold("chargeRate", chargeRateLowerLimit, chargeRateUpperrLimit, chargeRate);
 }
 
+void testBatteryIsOk(float temperature, float soc, float chargeRate, bool expectedResult)
+{
+    assert(batteryIsOk(temperature, soc, chargeRate) == expectedResult);
+}
+
 int main() {
-  assert(batteryIsOk(25, 70, 0.7) == true);
-  assert(batteryIsOk(50, 85, 0) == false);
+    testBatteryIsOk(25, 70, 0.7, true);
+    testBatteryIsOk(50, 85, 0, false);
+    testBatteryIsOk(-2, 75, 0, false);
+    testBatteryIsOk(34, 85, 0, false);
+    testBatteryIsOk(34, 15, 0, false);
+    testBatteryIsOk(34, 25, 1, false);
+    testBatteryIsOk(34, 25, -0.1, false);
 }
