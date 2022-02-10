@@ -1,32 +1,40 @@
 #include <assert.h>
 #include <iostream>
+#include <string.h>
 using namespace std;
 
-float lowerLimit[3] = {0.0, 20.0, 0.0};
-float upperLimit[3] = {45.0, 80.0, 0.8};
+const float tempLowerLimit = 0.0F;
+const float tempUpperrLimit = 45.0F;
+const float socLowerLimit = 20.0F;
+const float socUpperLimit = 80.0F;
+const float chargeRateLowerLimit = 0.0F;
+const float chargeRateUpperrLimit = 0.8F;
 
-bool limitChecker(float value, float lowerLimit, float upperLimit)
+void printOnConsole(string str)
 {
-    if((value < lowerLimit) || (value > upperLimit))
+    std::cout<<str;
+}
+
+bool checkIfValueisWithinThreshold(string parameterName, float lowerLimit, float upperLimit, float value)
+{
+    if(value < lowerLimit)
     {
+        printOnConsole(parameterName+" value is less than lower limit "+to_string(lowerLimit));
+        return false;
+    }
+    else if(value > upperLimit)
+    {
+        printOnConsole(parameterName+" value is more than upper limit "+to_string(upperLimit));
         return false;
     }
     return true;
 }
 
-
 bool batteryIsOk(float temperature, float soc, float chargeRate) {
     string parameterName[3] = {"Temperature", "SOC", "Charge Rate"};
-    float parameterValue[3] = {temperature, soc, chargeRate};
-    for(int i=0; i<3; i++)
-    {
-        if(!limitChecker(parameterValue[i], lowerLimit[i], upperLimit[i]))
-        {
-            std::cout<<parameterName[i]<< " is out of range!"<<std::endl;
-            return false;
-        }
-    }
-    return true;
+    return checkIfValueisWithinThreshold("Temperature", tempLowerLimit, tempUpperrLimit, temperature) 
+                && checkIfValueisWithinThreshold("SOC", socLowerLimit, socUpperLimit, soc)
+                && checkIfValueisWithinThreshold("chargeRate", chargeRateLowerLimit, chargeRateUpperrLimit, chargeRate);
 }
 
 int main() {
